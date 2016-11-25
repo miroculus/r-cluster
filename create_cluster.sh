@@ -3,9 +3,9 @@
 # SETTING VARIABLES
 aws_zone='us-west-2'
 keypair='r-studio'
-slave_nodes=4
-ami_master_node='ami-6d47e40d'
-ami_slave_node='ami-5f41e23f'
+slave_nodes=3
+ami_master_node='ami-08248b68'
+ami_slave_node='ami-8b2a85eb'
 master_node_instance_type='m4.xlarge'
 slave_node_instance_type='m4.xlarge'
 cluster_name=RCluster-$(date +"%Y%m%d%H%M")
@@ -87,7 +87,7 @@ aws ec2 authorize-security-group-egress --group-id $SECURITY_GROUP_PRIVATE --pro
 aws ec2 authorize-security-group-egress --group-id $SECURITY_GROUP_PRIVATE --protocol udp --port 11000-11999 --source-group $SECURITY_GROUP_PUBLIC
 
 echo "[INFO][2/2] 5.Creating Slave Node(s)"
-SLAVE_NODE_IDS=$(aws ec2 run-instances --image-id $ami_slave_node --count $slave_nodes --instance-type $master_node_instance_type --key-name $keypair --security-group-ids $SECURITY_GROUP_PRIVATE --subnet-id $SUBNET_PRIVATE_ID | jq '.Instances[] | "\(.InstanceId)"')
+SLAVE_NODE_IDS=$(aws ec2 run-instances --image-id $ami_slave_node --count $slave_nodes --instance-type $slave_node_instance_type --key-name $keypair --security-group-ids $SECURITY_GROUP_PRIVATE --subnet-id $SUBNET_PRIVATE_ID | jq '.Instances[] | "\(.InstanceId)"')
 SLAVE_NODE_IDS="$(echo $SLAVE_NODE_IDS | sed 's/\"//g')"
 # We are going to tag the instances, but since they could be more than one, we are going to iterate
 for CURRENT_NODE in $(echo $SLAVE_NODE_IDS | tr " " "\n");
@@ -95,7 +95,7 @@ for CURRENT_NODE in $(echo $SLAVE_NODE_IDS | tr " " "\n");
 done
 
 echo "[INFO][2/2] 6.Creating Master Node"
-MASTER_NODE_ID=$(aws ec2 run-instances --image-id $ami_master_node --count 1 --instance-type $slave_node_instance_type --key-name $keypair --security-group-ids $SECURITY_GROUP_PUBLIC --subnet-id $SUBNET_PUBLIC_ID --associate-public-ip-address --user-data file://$master_instance_script | jq '.Instances[] | "\(.InstanceId)"')
+MASTER_NODE_ID=$(aws ec2 run-instances --image-id $ami_master_node --count 1 --instance-type $master_node_instance_type --key-name $keypair --security-group-ids $SECURITY_GROUP_PUBLIC --subnet-id $SUBNET_PUBLIC_ID --associate-public-ip-address --user-data file://$master_instance_script | jq '.Instances[] | "\(.InstanceId)"')
 MASTER_NODE_ID="$(echo $MASTER_NODE_ID | sed 's/\"//g')"
 #Tag Master Node
 aws ec2 create-tags --resources $MASTER_NODE_ID --tags Key=Name,Value=Master$cluster_name
@@ -104,5 +104,5 @@ MASTER_NODE_DNS=$(aws ec2 describe-instances --instance-ids $MASTER_NODE_ID | jq
 MASTER_NODE_DNS="$(echo $MASTER_NODE_DNS | sed 's/\"//g')"
 
 echo "Cluster Ready!"
-echo "To ssh: ssh -i 'r-studio.pem' ubuntu@"$MASTER_NODE_DNS
+echo "To ssh: ssh -i '"$keypair".pem' ubuntu@"$MASTER_NODE_DNS
 echo "To web access: http://"$MASTER_NODE_DNS" user:rstudio / password:rstudio"
