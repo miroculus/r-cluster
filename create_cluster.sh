@@ -4,8 +4,8 @@
 aws_zone='us-west-2'
 keypair='r-studio'
 slave_nodes=3
-ami_master_node='ami-08248b68'
-ami_slave_node='ami-8b2a85eb'
+ami_master_node='ami-99802ef9'
+ami_slave_node='ami-aa9c32ca'
 master_node_instance_type='m4.xlarge'
 slave_node_instance_type='m4.xlarge'
 cluster_name=RCluster-$(date +"%Y%m%d%H%M")
