@@ -27,7 +27,7 @@ echo "[INFO][2/2] 3.Creating VM"
 MASTER_NODE_ID=$(aws ec2 run-instances --image-id $ami_master_node --count 1 --instance-type $master_node_instance_type --key-name $keypair --security-group-ids $SECURITY_GROUP_PUBLIC  --associate-public-ip-address | jq '.Instances[] | "\(.InstanceId)"')
 MASTER_NODE_ID="$(echo $MASTER_NODE_ID | sed 's/\"//g')"
 #Tag Master Node
-aws ec2 create-tags --resources $MASTER_NODE_ID --tags Key=Name,Value=Master$vm_name
+aws ec2 create-tags --resources $MASTER_NODE_ID --tags Key=Name,Value=$vm_name
 
 MASTER_NODE_DNS=$(aws ec2 describe-instances --instance-ids $MASTER_NODE_ID | jq '.Reservations[].Instances[].PublicDnsName')
 MASTER_NODE_DNS="$(echo $MASTER_NODE_DNS | sed 's/\"//g')"
