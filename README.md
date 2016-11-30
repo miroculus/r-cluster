@@ -10,6 +10,7 @@ A nice & easy way to create on demand Clusters on AWS with:
 - [AWS Command line interface](https://aws.amazon.com/cli/)
 - A valid AWS account
 - `aws configure` in order to be logged in
+- [jq](https://stedolan.github.io/jq/) installed
 
 ## Usage
 
