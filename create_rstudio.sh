@@ -3,7 +3,7 @@
 # SETTING VARIABLES
 aws_zone='us-west-2'
 keypair='r-studio'
-ami_master_node='ami-6a52840a'
+ami_master_node='ami-cc54fcac'
 master_node_instance_type='m4.xlarge'
 vm_name=RStudio-$(date +"%Y%m%d%H%M")
 
