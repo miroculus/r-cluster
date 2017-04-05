@@ -18,6 +18,10 @@ A nice & easy way to create on demand R Clusters on AWS with:
 - `sh create_cluster.sh`
 - `sh create_rstudio.sh`
 
+## Update
+
+- `sh update_nodes.sh`: to update the node ip list, e.g. when cluster is restarted.
+
 ## Reference
 
 - `sh create_cluster.sh`: This script will send all these files to an S3 bucket, and then generates the R-Cluster via de `aws cli`
