@@ -1,16 +1,18 @@
 #!/bin/bash
 
-# SETTING VARIABLES
-aws_zone='us-west-2'
-keypair='r-studio'
-slave_nodes=3
-ami_master_node='ami-99802ef9'
-ami_slave_node='ami-aa9c32ca'
-master_node_instance_type='m4.xlarge'
-slave_node_instance_type='m4.4xlarge'
+# VARS
+[ -z "$aws_zone" ] && aws_zone='us-west-2'
+[ -z "$keypair" ] && keypair='r-studio'
+[ -z "$slave_nodes" ] && slave_nodes=3
+[ -z "$ami_master_node" ] && ami_master_node='ami-99802ef9'
+[ -z "$ami_slave_node" ] && ami_slave_node='ami-aa9c32ca'
+[ -z "$master_node_instance_type" ] && master_node_instance_type='m4.xlarge'
+[ -z "$slave_node_instance_type" ] && slave_node_instance_type='m4.4xlarge'
+[ -z "$master_instance_script" ] && master_instance_script='init/master.sh'
+[ -z "$s3_bucket" ] && s3_bucket='r-cluster'
+
+# CONST
 cluster_name=RCluster-$(date +"%Y%m%d%H%M")
-master_instance_script='init/master.sh'
-s3_bucket='r-cluster'
 
 echo "Creating cluster " $cluster_name
 
